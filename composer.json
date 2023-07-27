@@ -1,24 +1,34 @@
 {
-    "name": "afj95/hijri-date-picker",
-    "version": "0.0.1",
-    "description": "A Laravel Nova field.",
+    "name": "afj95/laravel-nova-hijri-datepicker-field",
+    "version": "0.0.2",
+    "description": "Laravel nova hijri datepicker field.",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "hijri",
+        "islamic",
+        "datepicker",
+        "field"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "mPhpMaster",
+            "email": "59211285+mPhpMaster@users.noreply.github.com"
+        }
+    ],
     "require": {
         "php": "^7.3|^8.0"
     },
     "autoload": {
         "psr-4": {
-            "Afj95\\HijriDatePicker\\": "src/"
+            "Afj95\\LaravelNovaHijriDatepickerField\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Afj95\\HijriDatePicker\\FieldServiceProvider"
+                "Afj95\\LaravelNovaHijriDatepickerField\\FieldServiceProvider"
             ]
         }
     },

@@ -1,65 +1,73 @@
 <template>
-  <DefaultField
-    :field="field"
-    :errors="errors"
-    :show-help-text="showHelpText"
-    :full-width-content="fullWidthContent">
-    <template #field>
-      <input
-        id="calender"
-        type="text"
-        class="form-control form-input form-input-bordered "
-        :class="errorClasses"
-      />
-      
-      <datepicker-hijri
-        reference="calender"
-        :placement="field.placement"
-        :date-format="field.format"
-        :selected-date="field.selected_date"
-        :placeholder="field.name"
-        v-model="value"
-        />
-    </template>
-  </DefaultField>
+    <DefaultField
+        :field="field"
+        :errors="errors"
+        :show-help-text="showHelpText"
+        :full-width-content="fullWidthContent"
+    >
+        <template #field>
+            <div class="flex items-center">
+                <input
+                    type="text"
+                    class="form-control form-input form-input-bordered"
+                    :id="field.uniqueKey"
+                    :dusk="field.attribute"
+                    :name="field.name"
+                    :value="value"
+                    :class="errorClasses"
+                    :disabled="field.readonly"
+                    @change="handleChange"
+                    :placeholder="field.placeholder || field.name"
+                />
+
+                <datepicker-hijri
+                    v-bind="{ ...$props, ...$attrs }"
+                    :reference="field.uniqueKey"
+                    :placement="field.placement"
+                    :selected-date="field.value||field.selected_date||value"
+                    :date-format="field.format"
+                    v-model="value"
+                />
+            </div>
+        </template>
+    </DefaultField>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from 'laravel-nova'
+import {FormField, DependentFormField, HandlesValidationErrors} from 'laravel-nova'
 
 export default {
-  mixins: [FormField, HandlesValidationErrors],
-  props: ['resourceName', 'resourceId', 'field'],
+    mixins: [FormField, HandlesValidationErrors, DependentFormField],
 
-  mounted() {
-      var scriptTag = document.createElement("script");
-      scriptTag.src = "//cdn.jsdelivr.net/gh/abublihi/datepicker-hijri@v1.1/build/datepicker-hijri.js";
-      scriptTag.id = "my-datatable";
-      document.getElementsByTagName('head')[0].appendChild(scriptTag);
+    props: ['resourceName', 'resourceId', 'field'],
+
+    methods: {
+        /*
+         * Set the initial, internal value for the field.
+         */
+        setInitialValue() {
+            this.value = this.field.value || this.value
+        },
+
+        /**
+         * Fill the given FormData object with the field's internal value.
+         */
+        fill(formData) {
+            this.fillIfVisible(formData, this.field.attribute, this.value || '')
+        },
+
+        /**
+         * Update the field's internal value
+         */
+        handleChange(event) {
+            let value = event?.target?.value ?? event
+
+            this.value = value
+            if (this.field) {
+                this.emitFieldValueChange(this.field.attribute, this.value)
+            }
+        },
     },
-
-  methods: {
-
-    /*
-     * Set the initial, internal value for the field.
-     */
-    setInitialValue() {
-      this.value = this.field.value || ''
-    },
-
-    /**
-     * Fill the given FormData object with the field's internal value.
-     */
-    fill(formData) {
-      // console.log('field', this.field);
-      console.log('value', [...this.field]);
-      // console.log('formData', formData);
-      formData.append(this.field.attribute, this.value || '')
-    },
-  },
 }
 </script>
 
-<css>
-
-</css>

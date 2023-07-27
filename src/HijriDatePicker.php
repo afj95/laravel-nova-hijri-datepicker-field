@@ -1,9 +1,13 @@
 <?php
 
-namespace Afj95\HijriDatePicker;
+namespace Afj95\LaravelNovaHijriDatepickerField;
 
+use Carbon\Carbon;
 use Laravel\Nova\Fields\Field;
 
+/**
+ *
+ */
 class HijriDatePicker extends Field
 {
     /**
@@ -13,6 +17,28 @@ class HijriDatePicker extends Field
      */
     public $component = 'hijri-date-picker';
 
+    /**
+     * Create a new field.
+     *
+     * @param  string  $name
+     * @param  string|\Closure|callable|object|null  $attribute
+     * @param  (callable(mixed, mixed, ?string):mixed)|null  $resolveCallback
+     * @return void
+     */
+    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    {
+        parent::__construct($name, $attribute, $resolveCallback);
+
+        $this
+            ->format()
+            ->placeholder()
+            ->placement(currentLocale() === 'ar' ? 'left' : 'right');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
     public function placement($value = 'bottom')
     {
         $this->withMeta(['placement' => $value]);
@@ -20,6 +46,10 @@ class HijriDatePicker extends Field
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function format($value = 'iYYYY/iMM/iDD')
     {
         $this->withMeta(['format' => $value]);
@@ -27,6 +57,10 @@ class HijriDatePicker extends Field
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function selected_date($value)
     {
         $this->withMeta(['selected_date' => $value]);
@@ -34,9 +68,13 @@ class HijriDatePicker extends Field
         return $this;
     }
 
-    public function placeholder($value = 'dd/mm/yyyy')
+    /**
+     * @param string|null $text
+     * @return $this|HijriDatePicker
+     */
+    public function placeholder($text = '')
     {
-        $this->withMeta(['placeholder' => $value]);
+        $this->withMeta(['placeholder' => $text]);
 
         return $this;
 
@@ -44,8 +82,13 @@ class HijriDatePicker extends Field
 
     public function jsonSerialize(): array
     {
-        return array_merge(parent::jsonSerialize(), [
-            'id_name' => 'calendar' . $this->attribute,
+        $data = parent::jsonSerialize();
+        if (isset($data['value']) && $data['value'] instanceof Carbon) {
+            $data['value'] = $data['value']->format('Y/m/d');
+        }
+
+        return array_merge($data, [
+
         ]);
     }
 
