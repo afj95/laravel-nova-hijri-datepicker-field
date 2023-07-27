@@ -1,6 +1,6 @@
 {
     "name": "afj95/laravel-nova-hijri-datepicker-field",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "description": "Laravel nova hijri datepicker field.",
     "keywords": [
         "laravel",
