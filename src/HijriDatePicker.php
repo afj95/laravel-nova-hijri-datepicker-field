@@ -32,7 +32,8 @@ class HijriDatePicker extends Field
         $this
             ->format()
             ->placeholder()
-            ->placement(currentLocale() === 'ar' ? 'left' : 'right');
+            ->placement(currentLocale() === 'ar' ? 'left' : 'right')
+            ->displayUsing(fn($value, $resource, $attribute) => trim($value));
     }
 
     /**
@@ -50,7 +51,7 @@ class HijriDatePicker extends Field
      * @param $value
      * @return $this
      */
-    public function format($value = 'iYYYY/iMM/iDD')
+    public function format($value = 'iYYYY-iMM-iDD')
     {
         $this->withMeta(['format' => $value]);
 
@@ -84,7 +85,7 @@ class HijriDatePicker extends Field
     {
         $data = parent::jsonSerialize();
         if (isset($data['value']) && $data['value'] instanceof Carbon) {
-            $data['value'] = $data['value']->format('Y/m/d');
+            $data['value'] = $data['value']->format('Y-m-d');
         }
 
         return array_merge($data, [
